@@ -1,0 +1,72 @@
+import json
+import pandas as pd
+
+# Load the results.json file
+with open('results.json', 'r') as f:
+    data = json.load(f)
+
+# Encode the data as json
+encoded_data = json.dumps(data)
+
+# Decode the json data
+decoded_data = json.loads(encoded_data)
+
+# Find the total number of videos
+num_videos = len(data)
+
+# Create a dataframe to store the information about each frame
+df = pd.DataFrame(columns=['video_id', 'frame_id', 'person_count', 'vehicle_count', 'frame_time', 'id', 'face_data'])
+
+# Loop through each video and each frame in the video
+for i in range(num_videos):
+    frames = data[i]['frames']
+    num_frames = len(frames)
+    video_id = data[i]['id']
+    
+    # Find the missing frames in the video
+    missing_frames = set(range(num_frames)) - set(frame['id'] for frame in frames)
+    
+    # Print the missing frames
+    if missing_frames:
+        print(f"Missing frames in video {video_id}: {missing_frames}")
+    
+    # Loop through each frame in the video and store the information in the dataframe
+    for j in range(num_frames):
+        frame = frames[j]
+        df = df.append({'video_id': video_id,
+                        'frame_id': frame['id'],
+                        'person_count': frame['person_count'],
+                        'vehicle_count': frame['vehicle_count'],
+                        'frame_time': frame['frame_time'],
+                        'id': frame['id'],
+                        'face_data': frame['face_data']},
+                       ignore_index=True)
+
+# Find the maximum number of vehicles and people in each video
+max_vehicles = df.groupby('video_id')['vehicle_count'].max()
+max_people = df.groupby('video_id')['person_count'].max()
+
+print("Maximum number of vehicles in each video:")
+print(max_vehicles)
+print("\nMaximum number of people in each video:")
+print(max_people)
+
+# Find the number of categories of people and list the categories
+categories = set()
+for i in range(len(df)):
+    for person in df.loc[i, 'face_data']:
+        categories.add(person['category'])
+num_categories = len(categories)
+print(f"\nNumber of categories of people: {num_categories}")
+print("List of categories of people:")
+print(categories)
+
+# Find the people belonging to each category
+for category in categories:
+    people = set()
+    for i in range(len(df)):
+        for person in df.loc[i, 'face_data']:
+            if person['category'] == category:
+                people.add(person['id'])
+    print(f"\nPeople belonging to {category}:")
+    print(people)
