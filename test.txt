@@ -1,0 +1,198 @@
+1. Write a program in Python to find the sum of digits of a number using recursion?
+
+A)
+
+def sum_of_digits(n):
+    if n < 10:
+        return n
+    else:
+        return n % 10 + sum_of_digits(n // 10)
+
+num = int(input("Enter a number: "))
+sum = sum_of_digits(num)
+print("Sum of digits of", num, "is", sum)
+
+
+2. Write a program in Python to swap two numbers without using a third variable?
+
+A)
+
+
+def swap(n1,n2):
+    print("Before swap: num1 = ",n1,"num2 = ",n2)
+    n1=n1+n2
+    n2=n1-n2
+    n1=n1-n2
+    print("After swap: num1 = ",n1,"num2 = ",n2)
+    
+num1=int(input("enter first number"))
+num2=int(input("enter second number"))
+swap(num1,num2)
+
+
+3. Python Program to count occurrences of a character in below string and create a dictionary with keys as
+letters and values as count of occurrences of that letter.
+
+A)
+
+def count_chars(string):
+
+    char_count = {}
+
+    for char in string:
+        
+        if char in char_count:
+            
+            char_count[char] += 1
+        else:
+           
+            char_count[char] = 1
+    
+    return char_count
+
+
+string =  "fhdflshbfslkhfbslkfbhslfjhbsdvsJKBEFWEGWUYRTWGRUWOFWGEUIFBWDFWDBFHWJDVFHJKasdwtuknfiitngjt75378595hf75hr74h"
+char_count = count_chars(string)
+print(char_count)
+
+
+4. Write a python program to find the transpose of an image without any inbuilt functions or packages.
+
+A)
+
+def transpose_image(image):
+    
+    h = len(image)
+    
+    w = len(image[0])
+    
+    transposed_image = [[0 for i in range(h)] for j in range(w)]
+   
+    for i in range(h):
+        
+        for j in range(w):
+            
+            transposed_image[j][i] = image[i][j]
+    
+    return transposed_image
+
+image = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+transposed_image = transpose_image(image)
+
+print(transposed_image)
+
+
+
+5. https://www.hackerrank.com/challenges/list-comprehensions/problem?isFullScreen=true
+
+A)
+
+if __name__ == '__main__':
+    x = int(input())
+    y = int(input())
+    z = int(input())
+    n = int(input())
+    result = [[i, j, k] for i in range(x+1) for j in range(y+1) for k in range(z+1) if (i+j+k) != n]
+
+print(result)
+
+
+6. variable=["Bus", "car", {"Bus":["car", "bus", {"car":"bus", "Car":["bus", "car", ["BMW"]],
+},"Bus"]},"Bus"]
+
+print BMW as a string output
+
+A)
+
+bmw_string = variable[2]["Bus"][2]["Car"][0][0]
+
+print(bmw_string)
+
+
+
+
+
+import json
+import pandas as pd
+
+# Load the results.json file
+with open('results.json', 'r') as f:
+    data = json.load(f)
+
+# Encode the data as json
+encoded_data = json.dumps(data)
+
+# Decode the json data
+decoded_data = json.loads(encoded_data)
+
+# Find the total number of videos
+num_videos = len(data)
+
+# Create a dataframe to store the information about each frame
+df = pd.DataFrame(columns=['video_id', 'frame_id', 'person_count', 'vehicle_count', 'frame_time', 'id', 'face_data'])
+
+# Loop through each video and each frame in the video
+for i in range(num_videos):
+    frames = data[i]['frames']
+    num_frames = len(frames)
+    video_id = data[i]['id']
+    
+    # Find the missing frames in the video
+    missing_frames = set(range(num_frames)) - set(frame['id'] for frame in frames)
+    
+    # Print the missing frames
+    if missing_frames:
+        print(f"Missing frames in video {video_id}: {missing_frames}")
+    
+    # Loop through each frame in the video and store the information in the dataframe
+    for j in range(num_frames):
+        frame = frames[j]
+        df = df.append({'video_id': video_id,
+                        'frame_id': frame['id'],
+                        'person_count': frame['person_count'],
+                        'vehicle_count': frame['vehicle_count'],
+                        'frame_time': frame['frame_time'],
+                        'id': frame['id'],
+                        'face_data': frame['face_data']},
+                       ignore_index=True)
+
+# Find the maximum number of vehicles and people in each video
+max_vehicles = df.groupby('video_id')['vehicle_count'].max()
+max_people = df.groupby('video_id')['person_count'].max()
+
+print("Maximum number of vehicles in each video:")
+print(max_vehicles)
+print("\nMaximum number of people in each video:")
+print(max_people)
+
+# Find the number of categories of people and list the categories
+categories = set()
+for i in range(len(df)):
+    for person in df.loc[i, 'face_data']:
+        categories.add(person['category'])
+num_categories = len(categories)
+print(f"\nNumber of categories of people: {num_categories}")
+print("List of categories of people:")
+print(categories)
+
+# Find the people belonging to each category
+for category in categories:
+    people = set()
+    for i in range(len(df)):
+        for person in df.loc[i, 'face_data']:
+            if person['category'] == category:
+                people.add(person['id'])
+    print(f"\nPeople belonging to {category}:")
+    print(people)
+
+
+
+
+
+
+
